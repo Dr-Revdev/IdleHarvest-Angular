@@ -1,0 +1,23 @@
+<main class="game">
+  <section class="game-card">
+    <h1>Ferme de Carottes</h1>
+
+    <p class="counter">Carottes : {{ gameService.gameState.carrots }}</p>
+    <p class="counter">
+      Auto-Harvesters : {{ gameService.gameState.autoHarvesters }}
+    </p>
+    <p class="counter">
+      Prix du harvester : {{ gameService.gameState.harvesterPrice }} carottes
+    </p>
+
+    <button type="button" (click)="gameService.harvestCarrot()">
+      Récolter une carotte
+    </button>
+    <button type="button" (click)="gameService.buyHarvester()" [disabled]="!gameService.canBuyHarvester()">
+      Acheter un auto-harvester
+    </button>
+    <button type="button" class="reset-button" (click)="gameService.resetGame()">
+      Réinitialiser la partie
+    </button>
+  </section>
+</main>

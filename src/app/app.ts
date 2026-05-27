@@ -1,11 +1,10 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
+import { GameComponent } from './features/game/game.component';
 
 @Component({
   selector: 'app-root',
-  imports: [],
+  imports: [GameComponent],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
-export class App {
-  protected readonly title = signal('idle-carrot-angular');
-}
+export class App {}
