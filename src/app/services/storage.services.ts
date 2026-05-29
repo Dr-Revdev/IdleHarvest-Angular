@@ -38,8 +38,8 @@ export class StorageService {
             globalProductionMultiplierPrice: parseInt(localStorage.getItem('globalProductionMultiplierPrice') || '5000'),
             globalProductionMultiplierLevel: parseInt(localStorage.getItem('globalProductionMultiplierLevel') || '1'),
             tractors: parseInt(localStorage.getItem('tractors') || '0'),
-            tractorPrice: parseInt(localStorage.getItem('tractorPrice') || '10000'),
-            tractorProductionRate: parseInt(localStorage.getItem('tractorProductionRate') || '100'),
+            tractorPrice: parseInt(localStorage.getItem('tractorPrice') || '100000'),
+            tractorProductionRate: parseInt(localStorage.getItem('tractorProductionRate') || '1500'),
             
         };
     }

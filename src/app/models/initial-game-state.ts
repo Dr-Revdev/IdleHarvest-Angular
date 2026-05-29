@@ -14,6 +14,6 @@ export const initialGameState: GameState = {
   globalProductionMultiplierPrice: 5000,
   globalProductionMultiplierLevel: 1,
   tractors: 0,
-  tractorPrice: 10000,
-  tractorProductionRate: 100,
+  tractorPrice: 100000,
+  tractorProductionRate: 1500,
 };

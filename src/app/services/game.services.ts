@@ -9,7 +9,9 @@ import { StorageService } from './storage.services';
 export class GameService {
   gameState: GameState = { ...initialGameState };
 
-  constructor(private storageService: StorageService) {}
+  constructor(
+    private storageService: StorageService,
+  ) {}
 
   get totalProduction(): number {
     const farmerProduction =
@@ -78,7 +80,7 @@ export class GameService {
     this.gameState.carrots -= this.gameState.clickUpgradePrice;
     this.gameState.carrotsPerClick += 1;
     this.gameState.clickUpgradeLevel += 1;
-    this.gameState.clickUpgradePrice = Math.floor(this.gameState.clickUpgradePrice * 1.5);
+    this.gameState.clickUpgradePrice = Math.floor(this.gameState.clickUpgradePrice * 1.4);
 
     this.storageService.save(this.gameState);
   }
