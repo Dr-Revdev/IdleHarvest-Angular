@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { GameService } from '../../services/game.services';
+import { FormatNumberPipe } from '../../shared/pipes/format-number-pipe';
 
 @Component({
   selector: 'app-game',
-  imports: [],
+  imports: [FormatNumberPipe],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss',
 })
