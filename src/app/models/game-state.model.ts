@@ -3,4 +3,7 @@ export interface GameState {
     autoHarvesters: number;
     harvesterPrice: number;
     productionRate: number;
+    carrotsPerClick: number;
+    clickUpgradePrice: number;
+    productionUpgradePrice: number;
 }

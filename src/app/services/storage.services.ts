@@ -9,6 +9,10 @@ export class StorageService {
         localStorage.setItem('carrots', gameState.carrots.toString());
         localStorage.setItem('autoHarvesters', gameState.autoHarvesters.toString());
         localStorage.setItem('harvesterPrice', gameState.harvesterPrice.toString());
+        localStorage.setItem('carrotsPerClick', gameState.carrotsPerClick.toString());
+        localStorage.setItem('clickUpgradePrice', gameState.clickUpgradePrice.toString());
+        localStorage.setItem('productionUpgradePrice', gameState.productionUpgradePrice.toString());
+        localStorage.setItem('productionRate', gameState.productionRate.toString());
     }
 
     load(): GameState {
@@ -16,7 +20,10 @@ export class StorageService {
             carrots: parseInt(localStorage.getItem('carrots') || '0'),
             autoHarvesters: parseInt(localStorage.getItem('autoHarvesters') || '0'),
             harvesterPrice: parseInt(localStorage.getItem('harvesterPrice') || '10'),
-            productionRate: 1,
+            productionRate: parseInt(localStorage.getItem('productionRate') || '1'),
+            carrotsPerClick: parseInt(localStorage.getItem('carrotsPerClick') || '1'),
+            clickUpgradePrice: parseInt(localStorage.getItem('clickUpgradePrice') || '25'),
+            productionUpgradePrice: parseInt(localStorage.getItem('productionUpgradePrice') || '50'),
         };
     }
 }

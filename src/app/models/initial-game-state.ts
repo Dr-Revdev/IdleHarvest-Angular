@@ -5,4 +5,7 @@ export const initialGameState: GameState = {
   autoHarvesters: 0,
   harvesterPrice: 10,
   productionRate: 1,
+  carrotsPerClick: 1,
+  clickUpgradePrice: 25,
+  productionUpgradePrice: 50,
 };

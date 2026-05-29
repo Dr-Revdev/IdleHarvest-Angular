@@ -19,7 +19,7 @@ export class GameService {
   }
 
   harvestCarrot(): void {
-    this.gameState.carrots += 1;
+    this.gameState.carrots += this.gameState.carrotsPerClick;
     this.storageService.save(this.gameState);
   }
 
@@ -51,6 +51,38 @@ export class GameService {
     }
 
     this.gameState.carrots += gain;
+    this.storageService.save(this.gameState);
+  }
+
+  canBuyClickUpgrade(): boolean {
+    return this.gameState.carrots >= this.gameState.clickUpgradePrice;
+  }
+
+  buyClickUpgrade(): void {
+    if (!this.canBuyClickUpgrade()) {
+      return;
+    }
+
+    this.gameState.carrots -= this.gameState.clickUpgradePrice;
+    this.gameState.carrotsPerClick += 1;
+    this.gameState.clickUpgradePrice = Math.floor(this.gameState.clickUpgradePrice * 1.5);
+
+    this.storageService.save(this.gameState);
+  }
+
+  canBuyProductionUpgrade(): boolean {
+    return this.gameState.carrots >= this.gameState.productionUpgradePrice;
+  }
+
+  buyProductionUpgrade(): void {
+    if (!this.canBuyProductionUpgrade()) {
+      return;
+    }
+
+    this.gameState.carrots -= this.gameState.productionUpgradePrice;
+    this.gameState.productionRate += 1;
+    this.gameState.productionUpgradePrice = Math.floor(this.gameState.productionUpgradePrice * 1.6);
+
     this.storageService.save(this.gameState);
   }
 
