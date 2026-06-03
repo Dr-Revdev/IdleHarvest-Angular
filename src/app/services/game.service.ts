@@ -109,11 +109,10 @@ export class GameService {
     if (!this.canBuyProductionUpgrade()) {
       return;
     }
+
     this.commit((s) => {
       s.carrots -= s.productionUpgradePrice;
-      const farmer = s.producers.find((p) => p.id === 'farmers')!;
-      // Gain multiplicatif appliqué au taux de base du producteur.
-      farmer.productionRate *= 1.25;
+      s.autoProductionMultiplier *= 1.25;
       s.productionUpgradeLevel += 1;
       s.productionUpgradePrice = Math.floor(s.productionUpgradePrice * 1.6);
     });
@@ -151,7 +150,7 @@ export class GameService {
       (total, p) => total + p.quantity * p.productionRate,
       0
     );
-    return base * s.globalProductionMultiplier;
+    return base * s.autoProductionMultiplier * s.globalProductionMultiplier;
   }
 
   /** Débloque les producteurs déjà possédés ou financièrement atteignables. */

@@ -51,6 +51,11 @@
         Multiplicateur global :
         <strong>x{{ gameService.state().globalProductionMultiplier }}</strong>
       </p>
+      
+      <p>
+        Bonus production auto :
+        <strong>x{{ gameService.state().autoProductionMultiplier | formatNumber }}</strong>
+      </p>
     </section>
 
     <aside class="shop-panel">
@@ -82,7 +87,7 @@
       <button type="button" (click)="gameService.buyProductionUpgrade()"
         [disabled]="!gameService.canBuyProductionUpgrade()">
         <span>
-          Engrais - Niveau {{ gameService.state().productionUpgradeLevel }}
+          Engrais global - Niveau {{ gameService.state().productionUpgradeLevel }}
         </span>
         <small>
           Coût : {{ gameService.state().productionUpgradePrice | formatNumber }} carottes

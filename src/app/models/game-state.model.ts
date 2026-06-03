@@ -9,6 +9,7 @@ export interface GameState {
 
   productionUpgradePrice: number;
   productionUpgradeLevel: number;
+  autoProductionMultiplier: number;
 
   globalProductionMultiplier: number;
   globalProductionMultiplierPrice: number;

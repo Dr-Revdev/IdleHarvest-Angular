@@ -10,6 +10,7 @@ export const initialGameState: GameState = {
 
   productionUpgradePrice: 50,
   productionUpgradeLevel: 1,
+  autoProductionMultiplier: 1,
 
   globalProductionMultiplier: 1,
   globalProductionMultiplierPrice: 5000,
