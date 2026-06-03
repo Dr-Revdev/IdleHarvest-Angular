@@ -1,3 +1,5 @@
+import { Producer } from './producer.model';
+
 export interface GameState {
     carrots: number;
     autoFarmers: number;
@@ -14,4 +16,5 @@ export interface GameState {
     tractors: number;
     tractorPrice: number;
     tractorProductionRate: number;
+    producers: Producer[];
 }

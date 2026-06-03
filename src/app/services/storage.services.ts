@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { GameState } from "../models/game-state.model";
+import { initialProducers } from "../models/initial-producers";
 
 @Injectable({
     providedIn: 'root',
@@ -21,6 +22,7 @@ export class StorageService {
         localStorage.setItem('tractors', gameState.tractors.toString());
         localStorage.setItem('tractorPrice', gameState.tractorPrice.toString());
         localStorage.setItem('tractorProductionRate', gameState.tractorProductionRate.toString());
+        localStorage.setItem('producers', JSON.stringify(gameState.producers));
     }
 
     load(): GameState {
@@ -40,6 +42,7 @@ export class StorageService {
             tractors: parseInt(localStorage.getItem('tractors') || '0'),
             tractorPrice: parseInt(localStorage.getItem('tractorPrice') || '100000'),
             tractorProductionRate: parseInt(localStorage.getItem('tractorProductionRate') || '1500'),
+            producers: JSON.parse(localStorage.getItem('producers') || JSON.stringify(initialProducers)),
             
         };
     }

@@ -25,6 +25,12 @@ export class GameService {
     ) * this.gameState.globalProductionMultiplier;
   }
 
+  get producersProduction(): number {
+    return this.gameState.producers.reduce((total, producer) => {
+      return total + producer.quantity * producer.productionRate;
+    }, 0);
+  }
+
   startAutoProduction(onTick: () => void): void {
     setInterval(() => {
       this.produceAutomatically();
@@ -130,7 +136,7 @@ export class GameService {
 
     this.gameState.carrots -= this.gameState.tractorPrice;
     this.gameState.tractors += 1;
-    this.gameState.tractorPrice = Math.floor(this.gameState.tractorPrice * 1.25);
+    this.gameState.tractorPrice = Math.floor(this.gameState.tractorPrice * 1.35);
 
     this.storageService.save(this.gameState);
   }

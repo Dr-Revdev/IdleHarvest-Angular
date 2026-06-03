@@ -1,4 +1,5 @@
 import { GameState } from './game-state.model';
+import { initialProducers } from './initial-producers';
 
 export const initialGameState: GameState = {
   carrots: 0,
@@ -16,4 +17,5 @@ export const initialGameState: GameState = {
   tractors: 0,
   tractorPrice: 100000,
   tractorProductionRate: 1500,
+  producers: structuredClone(initialProducers),
 };
