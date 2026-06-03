@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GameService } from '../../services/game.service';
 import { FormatNumberPipe } from '../../shared/pipes/format-number-pipe';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-game',
-  imports: [FormatNumberPipe],
+  imports: [FormatNumberPipe, DecimalPipe],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss',
 })

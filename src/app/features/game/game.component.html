@@ -27,18 +27,18 @@
       <p>Carottes par clic : <strong>{{ gameService.state().carrotsPerClick | formatNumber }}</strong></p>
 
       @for (producer of gameService.state().producers; track producer.id) {
-        @if (producer.isUnlocked) {
-          <p>
-            {{ producer.name }} :
-            <strong>{{ producer.quantity | formatNumber }}</strong>
-          </p>
+      @if (producer.isUnlocked) {
+      <p>
+        {{ producer.name }} :
+        <strong>{{ producer.quantity | formatNumber }}</strong>
+      </p>
 
-          <p>
-            Production par unité :
-            <strong>{{ producer.productionRate | formatNumber }}</strong>
-            / sec
-          </p>
-        }
+      <p>
+        Production par unité :
+        <strong>{{ producer.productionRate | formatNumber }}</strong>
+        / sec
+      </p>
+      }
       }
 
       <p>
@@ -51,10 +51,10 @@
         Multiplicateur global :
         <strong>x{{ gameService.state().globalProductionMultiplier }}</strong>
       </p>
-      
+
       <p>
         Bonus production auto :
-        <strong>x{{ gameService.state().autoProductionMultiplier | formatNumber }}</strong>
+        <strong>x{{ gameService.state().autoProductionMultiplier | number:'1.2-2' }}</strong>
       </p>
     </section>
 
@@ -71,17 +71,17 @@
       </button>
 
       @for (producer of gameService.state().producers; track producer.id) {
-        @if (producer.isUnlocked) {
-          <button type="button" (click)="gameService.buyProducer(producer.id)"
-            [disabled]="!gameService.canBuyProducer(producer.id)">
-            <span>Acheter : {{ producer.name }}</span>
-            <small>
-              Coût :
-              {{ producer.price | formatNumber }}
-              carottes
-            </small>
-          </button>
-        }
+      @if (producer.isUnlocked) {
+      <button type="button" (click)="gameService.buyProducer(producer.id)"
+        [disabled]="!gameService.canBuyProducer(producer.id)">
+        <span>Acheter : {{ producer.name }}</span>
+        <small>
+          Coût :
+          {{ producer.price | formatNumber }}
+          carottes
+        </small>
+      </button>
+      }
       }
 
       <button type="button" (click)="gameService.buyProductionUpgrade()"

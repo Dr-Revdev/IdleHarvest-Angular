@@ -114,7 +114,7 @@ export class GameService {
       s.carrots -= s.productionUpgradePrice;
       s.autoProductionMultiplier *= 1.25;
       s.productionUpgradeLevel += 1;
-      s.productionUpgradePrice = Math.floor(s.productionUpgradePrice * 1.6);
+      s.productionUpgradePrice = Math.floor(s.productionUpgradePrice * 2.2);
     });
   }
 
@@ -131,7 +131,7 @@ export class GameService {
       // Multiplicateur global doublé à chaque achat.
       s.globalProductionMultiplier *= 2;
       s.globalProductionMultiplierLevel += 1;
-      s.globalProductionMultiplierPrice = Math.floor(s.globalProductionMultiplierPrice * 5);
+      s.globalProductionMultiplierPrice = Math.floor(s.globalProductionMultiplierPrice * 25);
     });
   }
 
