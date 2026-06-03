@@ -10,7 +10,7 @@ import { StorageService } from './storage.services';
 export class GameService {
   gameState: GameState = structuredClone(initialGameState);
 
-  constructor(private storageService: StorageService) {}
+  constructor(private storageService: StorageService) { }
 
   get totalProduction(): number {
     const producersProduction = this.gameState.producers.reduce(
@@ -30,11 +30,13 @@ export class GameService {
 
   harvestCarrot(): void {
     this.gameState.carrots += this.gameState.carrotsPerClick;
+    this.updateUnlockedProducers();
     this.storageService.save(this.gameState);
   }
 
   loadGame(): void {
     this.gameState = this.storageService.load();
+    this.updateUnlockedProducers();
   }
 
   getProducer(id: string): Producer {
@@ -47,6 +49,10 @@ export class GameService {
     }
 
     return producer;
+  }
+
+  isProducerVisible(producer: Producer): boolean {
+    return producer.isUnlocked;
   }
 
   canBuyProducer(id: string): boolean {
@@ -75,6 +81,7 @@ export class GameService {
     }
 
     this.gameState.carrots += gain;
+    this.updateUnlockedProducers();
     this.storageService.save(this.gameState);
   }
 
@@ -146,5 +153,19 @@ export class GameService {
 
     this.gameState = structuredClone(initialGameState);
     this.storageService.save(this.gameState);
+  }
+
+  private updateUnlockedProducers(): void {
+    for (const producer of this.gameState.producers) {
+      if (
+        !producer.isUnlocked &&
+        (
+          producer.quantity > 0 ||
+          this.gameState.carrots >= producer.price * 0.1
+        )
+      ) {
+        producer.isUnlocked = true;
+      }
+    }
   }
 }

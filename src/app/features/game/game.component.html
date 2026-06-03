@@ -27,16 +27,18 @@
       <p>Carottes par clic : <strong>{{ gameService.gameState.carrotsPerClick | formatNumber }}</strong></p>
 
       @for (producer of gameService.gameState.producers; track producer.id) {
-        <p>
-          {{ producer.name }} :
-          <strong>{{ producer.quantity | formatNumber }}</strong>
-        </p>
+      @if (gameService.isProducerVisible(producer)) {
+      <p>
+        {{ producer.name }} :
+        <strong>{{ producer.quantity | formatNumber }}</strong>
+      </p>
 
-        <p>
-          Production par unité :
-          <strong>{{ producer.productionRate | formatNumber }}</strong>
-          / sec
-        </p>
+      <p>
+        Production par unité :
+        <strong>{{ producer.productionRate | formatNumber }}</strong>
+        / sec
+      </p>
+      }
       }
 
       <p>
@@ -54,11 +56,7 @@
     <aside class="shop-panel">
       <h2>Boutique</h2>
 
-      <button
-        type="button"
-        (click)="gameService.buyClickUpgrade()"
-        [disabled]="!gameService.canBuyClickUpgrade()"
-      >
+      <button type="button" (click)="gameService.buyClickUpgrade()" [disabled]="!gameService.canBuyClickUpgrade()">
         <span>
           Gants renforcés - Niveau {{ gameService.gameState.clickUpgradeLevel }}
         </span>
@@ -68,25 +66,21 @@
       </button>
 
       @for (producer of gameService.gameState.producers; track producer.id) {
-        <button
-          type="button"
-          (click)="gameService.buyProducer(producer.id)"
-          [disabled]="!gameService.canBuyProducer(producer.id)"
-        >
-          <span>Acheter : {{ producer.name }}</span>
-          <small>
-            Coût :
-            {{ producer.price | formatNumber }}
-            carottes
-          </small>
-        </button>
+      @if (gameService.isProducerVisible(producer)) {
+      <button type="button" (click)="gameService.buyProducer(producer.id)"
+        [disabled]="!gameService.canBuyProducer(producer.id)">
+        <span>Acheter : {{ producer.name }}</span>
+        <small>
+          Coût :
+          {{ producer.price | formatNumber }}
+          carottes
+        </small>
+      </button>
+      }
       }
 
-      <button
-        type="button"
-        (click)="gameService.buyProductionUpgrade()"
-        [disabled]="!gameService.canBuyProductionUpgrade()"
-      >
+      <button type="button" (click)="gameService.buyProductionUpgrade()"
+        [disabled]="!gameService.canBuyProductionUpgrade()">
         <span>
           Engrais - Niveau {{ gameService.gameState.productionUpgradeLevel }}
         </span>
@@ -95,11 +89,8 @@
         </small>
       </button>
 
-      <button
-        type="button"
-        (click)="gameService.buyGlobalProductionMultiplier()"
-        [disabled]="!gameService.canBuyGlobalProductionMultiplier()"
-      >
+      <button type="button" (click)="gameService.buyGlobalProductionMultiplier()"
+        [disabled]="!gameService.canBuyGlobalProductionMultiplier()">
         <span>
           Serre automatisée - Niveau
           {{ gameService.gameState.globalProductionMultiplierLevel }}

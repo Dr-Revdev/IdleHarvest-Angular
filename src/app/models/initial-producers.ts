@@ -8,6 +8,7 @@ export const initialProducers: Producer[] = [
     price: 10,
     productionRate: 1,
     priceMultiplier: 1.2,
+    isUnlocked: true,
   },
   {
     id: 'tractors',
@@ -16,5 +17,15 @@ export const initialProducers: Producer[] = [
     price: 100000,
     productionRate: 1500,
     priceMultiplier: 1.35,
+    isUnlocked: false,
   },
+  {
+    id: 'harvesters',
+    name: 'Moissonneuse',
+    quantity: 0,
+    price: 5000000,
+    productionRate: 75000,
+    priceMultiplier: 1.4,
+    isUnlocked: false,
+  }
 ];

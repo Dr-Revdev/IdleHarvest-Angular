@@ -5,4 +5,5 @@ export interface Producer {
     price: number;
     productionRate: number;
     priceMultiplier: number;
+    isUnlocked: boolean;
 }
