@@ -5,6 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class FormatNumberPipe implements PipeTransform {
   transform(value: number): string {
-    return value.toLocaleString('fr-FR')
+    // Arrondit à l'entier inférieur avant formatage.
+    return Math.floor(value).toLocaleString('fr-FR');
   }
 }

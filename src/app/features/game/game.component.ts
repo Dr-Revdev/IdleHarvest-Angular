@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { GameService } from '../../services/game.services';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { GameService } from '../../services/game.service';
 import { FormatNumberPipe } from '../../shared/pipes/format-number-pipe';
 
 @Component({
@@ -8,17 +8,15 @@ import { FormatNumberPipe } from '../../shared/pipes/format-number-pipe';
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss',
 })
-export class GameComponent implements OnInit {
-  constructor(
-    private changeDetector: ChangeDetectorRef,
-    public gameService: GameService
-  ) {}
+export class GameComponent implements OnInit, OnDestroy {
+  constructor(public gameService: GameService) {}
 
   ngOnInit(): void {
     this.gameService.loadGame();
+    this.gameService.startGameLoop();
+  }
 
-    this.gameService.startAutoProduction(() => {
-      this.changeDetector.detectChanges();
-    });
+  ngOnDestroy(): void {
+    this.gameService.stopGameLoop();
   }
 }

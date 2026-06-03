@@ -23,33 +23,33 @@
     <section class="stats-panel">
       <h2>Statistiques</h2>
 
-      <p>Carottes : <strong>{{ gameService.gameState.carrots | formatNumber }}</strong></p>
-      <p>Carottes par clic : <strong>{{ gameService.gameState.carrotsPerClick | formatNumber }}</strong></p>
+      <p>Carottes : <strong>{{ gameService.state().carrots | formatNumber }}</strong></p>
+      <p>Carottes par clic : <strong>{{ gameService.state().carrotsPerClick | formatNumber }}</strong></p>
 
-      @for (producer of gameService.gameState.producers; track producer.id) {
-      @if (gameService.isProducerVisible(producer)) {
-      <p>
-        {{ producer.name }} :
-        <strong>{{ producer.quantity | formatNumber }}</strong>
-      </p>
+      @for (producer of gameService.state().producers; track producer.id) {
+        @if (producer.isUnlocked) {
+          <p>
+            {{ producer.name }} :
+            <strong>{{ producer.quantity | formatNumber }}</strong>
+          </p>
 
-      <p>
-        Production par unité :
-        <strong>{{ producer.productionRate | formatNumber }}</strong>
-        / sec
-      </p>
-      }
+          <p>
+            Production par unité :
+            <strong>{{ producer.productionRate | formatNumber }}</strong>
+            / sec
+          </p>
+        }
       }
 
       <p>
         Production totale :
-        <strong> {{ gameService.totalProduction | formatNumber }} </strong>
+        <strong>{{ gameService.totalProduction() | formatNumber }}</strong>
         / sec
       </p>
 
       <p>
         Multiplicateur global :
-        <strong>x{{ gameService.gameState.globalProductionMultiplier }}</strong>
+        <strong>x{{ gameService.state().globalProductionMultiplier }}</strong>
       </p>
     </section>
 
@@ -58,34 +58,34 @@
 
       <button type="button" (click)="gameService.buyClickUpgrade()" [disabled]="!gameService.canBuyClickUpgrade()">
         <span>
-          Gants renforcés - Niveau {{ gameService.gameState.clickUpgradeLevel }}
+          Gants renforcés - Niveau {{ gameService.state().clickUpgradeLevel }}
         </span>
         <small>
-          Coût : {{ gameService.gameState.clickUpgradePrice | formatNumber }} carottes
+          Coût : {{ gameService.state().clickUpgradePrice | formatNumber }} carottes
         </small>
       </button>
 
-      @for (producer of gameService.gameState.producers; track producer.id) {
-      @if (gameService.isProducerVisible(producer)) {
-      <button type="button" (click)="gameService.buyProducer(producer.id)"
-        [disabled]="!gameService.canBuyProducer(producer.id)">
-        <span>Acheter : {{ producer.name }}</span>
-        <small>
-          Coût :
-          {{ producer.price | formatNumber }}
-          carottes
-        </small>
-      </button>
-      }
+      @for (producer of gameService.state().producers; track producer.id) {
+        @if (producer.isUnlocked) {
+          <button type="button" (click)="gameService.buyProducer(producer.id)"
+            [disabled]="!gameService.canBuyProducer(producer.id)">
+            <span>Acheter : {{ producer.name }}</span>
+            <small>
+              Coût :
+              {{ producer.price | formatNumber }}
+              carottes
+            </small>
+          </button>
+        }
       }
 
       <button type="button" (click)="gameService.buyProductionUpgrade()"
         [disabled]="!gameService.canBuyProductionUpgrade()">
         <span>
-          Engrais - Niveau {{ gameService.gameState.productionUpgradeLevel }}
+          Engrais - Niveau {{ gameService.state().productionUpgradeLevel }}
         </span>
         <small>
-          Coût : {{ gameService.gameState.productionUpgradePrice | formatNumber }} carottes
+          Coût : {{ gameService.state().productionUpgradePrice | formatNumber }} carottes
         </small>
       </button>
 
@@ -93,11 +93,11 @@
         [disabled]="!gameService.canBuyGlobalProductionMultiplier()">
         <span>
           Serre automatisée - Niveau
-          {{ gameService.gameState.globalProductionMultiplierLevel }}
+          {{ gameService.state().globalProductionMultiplierLevel }}
         </span>
         <small>
           Coût :
-          {{ gameService.gameState.globalProductionMultiplierPrice | formatNumber }}
+          {{ gameService.state().globalProductionMultiplierPrice | formatNumber }}
           carottes
         </small>
       </button>
