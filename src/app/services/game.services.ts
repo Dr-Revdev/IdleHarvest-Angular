@@ -1,34 +1,24 @@
 import { Injectable } from '@angular/core';
 import { GameState } from '../models/game-state.model';
 import { initialGameState } from '../models/initial-game-state';
+import { Producer } from '../models/producer.model';
 import { StorageService } from './storage.services';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GameService {
-  gameState: GameState = { ...initialGameState };
+  gameState: GameState = structuredClone(initialGameState);
 
-  constructor(
-    private storageService: StorageService,
-  ) {}
+  constructor(private storageService: StorageService) {}
 
   get totalProduction(): number {
-    const farmerProduction =
-      this.gameState.autoFarmers * this.gameState.productionRate;
+    const producersProduction = this.gameState.producers.reduce(
+      (total, producer) => total + producer.quantity * producer.productionRate,
+      0
+    );
 
-    const tractorProduction =
-      this.gameState.tractors * this.gameState.tractorProductionRate;
-
-    return (
-      farmerProduction + tractorProduction
-    ) * this.gameState.globalProductionMultiplier;
-  }
-
-  get producersProduction(): number {
-    return this.gameState.producers.reduce((total, producer) => {
-      return total + producer.quantity * producer.productionRate;
-    }, 0);
+    return producersProduction * this.gameState.globalProductionMultiplier;
   }
 
   startAutoProduction(onTick: () => void): void {
@@ -47,18 +37,32 @@ export class GameService {
     this.gameState = this.storageService.load();
   }
 
-  canBuyFarmer(): boolean {
-    return this.gameState.carrots >= this.gameState.farmerPrice;
+  getProducer(id: string): Producer {
+    const producer = this.gameState.producers.find(
+      (currentProducer) => currentProducer.id === id
+    );
+
+    if (!producer) {
+      throw new Error(`Producteur introuvable : ${id}`);
+    }
+
+    return producer;
   }
 
-  buyFarmer(): void {
-    if (!this.canBuyFarmer()) {
+  canBuyProducer(id: string): boolean {
+    return this.gameState.carrots >= this.getProducer(id).price;
+  }
+
+  buyProducer(id: string): void {
+    const producer = this.getProducer(id);
+
+    if (!this.canBuyProducer(id)) {
       return;
     }
 
-    this.gameState.carrots -= this.gameState.farmerPrice;
-    this.gameState.autoFarmers += 1;
-    this.gameState.farmerPrice = Math.floor(this.gameState.farmerPrice * 1.2);
+    this.gameState.carrots -= producer.price;
+    producer.quantity += 1;
+    producer.price = Math.floor(producer.price * producer.priceMultiplier);
 
     this.storageService.save(this.gameState);
   }
@@ -86,7 +90,9 @@ export class GameService {
     this.gameState.carrots -= this.gameState.clickUpgradePrice;
     this.gameState.carrotsPerClick += 1;
     this.gameState.clickUpgradeLevel += 1;
-    this.gameState.clickUpgradePrice = Math.floor(this.gameState.clickUpgradePrice * 1.4);
+    this.gameState.clickUpgradePrice = Math.floor(
+      this.gameState.clickUpgradePrice * 1.4
+    );
 
     this.storageService.save(this.gameState);
   }
@@ -100,10 +106,14 @@ export class GameService {
       return;
     }
 
+    const farmers = this.getProducer('farmers');
+
     this.gameState.carrots -= this.gameState.productionUpgradePrice;
-    this.gameState.productionRate += 1;
+    farmers.productionRate += 1;
     this.gameState.productionUpgradeLevel += 1;
-    this.gameState.productionUpgradePrice = Math.floor(this.gameState.productionUpgradePrice * 1.6);
+    this.gameState.productionUpgradePrice = Math.floor(
+      this.gameState.productionUpgradePrice * 1.6
+    );
 
     this.storageService.save(this.gameState);
   }
@@ -120,23 +130,9 @@ export class GameService {
     this.gameState.carrots -= this.gameState.globalProductionMultiplierPrice;
     this.gameState.globalProductionMultiplier += 1;
     this.gameState.globalProductionMultiplierLevel += 1;
-    this.gameState.globalProductionMultiplierPrice = Math.floor(this.gameState.globalProductionMultiplierPrice * 3);
-
-    this.storageService.save(this.gameState);
-  }
-
-  canBuyTractor(): boolean {
-    return this.gameState.carrots >= this.gameState.tractorPrice;
-  }
-
-  buyTractor(): void {
-    if (!this.canBuyTractor()) {
-      return;
-    }
-
-    this.gameState.carrots -= this.gameState.tractorPrice;
-    this.gameState.tractors += 1;
-    this.gameState.tractorPrice = Math.floor(this.gameState.tractorPrice * 1.35);
+    this.gameState.globalProductionMultiplierPrice = Math.floor(
+      this.gameState.globalProductionMultiplierPrice * 3
+    );
 
     this.storageService.save(this.gameState);
   }
@@ -148,7 +144,7 @@ export class GameService {
       return;
     }
 
-    this.gameState = { ...initialGameState };
+    this.gameState = structuredClone(initialGameState);
     this.storageService.save(this.gameState);
   }
 }

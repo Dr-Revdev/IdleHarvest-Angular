@@ -1,6 +1,8 @@
-import { Injectable } from "@angular/core";
-import { GameState } from "../models/game-state.model";
-import { initialProducers } from "../models/initial-producers";
+import { Injectable } from '@angular/core';
+import { GameState } from '../models/game-state.model';
+import { initialGameState } from '../models/initial-game-state';
+import { initialProducers } from '../models/initial-producers';
+import { Producer } from '../models/producer.model';
 
 @Injectable({
     providedIn: 'root',
@@ -8,42 +10,130 @@ import { initialProducers } from "../models/initial-producers";
 export class StorageService {
     save(gameState: GameState): void {
         localStorage.setItem('carrots', gameState.carrots.toString());
-        localStorage.setItem('autoFarmers', gameState.autoFarmers.toString());
-        localStorage.setItem('farmerPrice', gameState.farmerPrice.toString());
         localStorage.setItem('carrotsPerClick', gameState.carrotsPerClick.toString());
+
         localStorage.setItem('clickUpgradePrice', gameState.clickUpgradePrice.toString());
-        localStorage.setItem('productionUpgradePrice', gameState.productionUpgradePrice.toString());
-        localStorage.setItem('productionRate', gameState.productionRate.toString());
         localStorage.setItem('clickUpgradeLevel', gameState.clickUpgradeLevel.toString());
-        localStorage.setItem('productionUpgradeLevel', gameState.productionUpgradeLevel.toString());
-        localStorage.setItem('globalProductionMultiplier',gameState.globalProductionMultiplier.toString());
-        localStorage.setItem('globalProductionMultiplierPrice',gameState.globalProductionMultiplierPrice.toString());
-        localStorage.setItem('globalProductionMultiplierLevel', gameState.globalProductionMultiplierLevel.toString());
-        localStorage.setItem('tractors', gameState.tractors.toString());
-        localStorage.setItem('tractorPrice', gameState.tractorPrice.toString());
-        localStorage.setItem('tractorProductionRate', gameState.tractorProductionRate.toString());
+
+        localStorage.setItem(
+            'productionUpgradePrice',
+            gameState.productionUpgradePrice.toString()
+        );
+        localStorage.setItem(
+            'productionUpgradeLevel',
+            gameState.productionUpgradeLevel.toString()
+        );
+
+        localStorage.setItem(
+            'globalProductionMultiplier',
+            gameState.globalProductionMultiplier.toString()
+        );
+        localStorage.setItem(
+            'globalProductionMultiplierPrice',
+            gameState.globalProductionMultiplierPrice.toString()
+        );
+        localStorage.setItem(
+            'globalProductionMultiplierLevel',
+            gameState.globalProductionMultiplierLevel.toString()
+        );
+
         localStorage.setItem('producers', JSON.stringify(gameState.producers));
     }
 
     load(): GameState {
         return {
-            carrots: parseInt(localStorage.getItem('carrots') || '0'),
-            autoFarmers: parseInt(localStorage.getItem('autoFarmers') || '0'),
-            farmerPrice: parseInt(localStorage.getItem('farmerPrice') || '10'),
-            productionRate: parseInt(localStorage.getItem('productionRate') || '1'),
-            carrotsPerClick: parseInt(localStorage.getItem('carrotsPerClick') || '1'),
-            clickUpgradePrice: parseInt(localStorage.getItem('clickUpgradePrice') || '25'),
-            productionUpgradePrice: parseInt(localStorage.getItem('productionUpgradePrice') || '50'),
-            clickUpgradeLevel: parseInt(localStorage.getItem('clickUpgradeLevel') || '1'),
-            productionUpgradeLevel: parseInt(localStorage.getItem('productionUpgradeLevel') || '1'),
-            globalProductionMultiplier: parseInt(localStorage.getItem('globalProductionMultiplier') || '1'),
-            globalProductionMultiplierPrice: parseInt(localStorage.getItem('globalProductionMultiplierPrice') || '5000'),
-            globalProductionMultiplierLevel: parseInt(localStorage.getItem('globalProductionMultiplierLevel') || '1'),
-            tractors: parseInt(localStorage.getItem('tractors') || '0'),
-            tractorPrice: parseInt(localStorage.getItem('tractorPrice') || '100000'),
-            tractorProductionRate: parseInt(localStorage.getItem('tractorProductionRate') || '1500'),
-            producers: JSON.parse(localStorage.getItem('producers') || JSON.stringify(initialProducers)),
-            
+            carrots: this.getNumber('carrots', initialGameState.carrots),
+            carrotsPerClick: this.getNumber(
+                'carrotsPerClick',
+                initialGameState.carrotsPerClick
+            ),
+
+            clickUpgradePrice: this.getNumber(
+                'clickUpgradePrice',
+                initialGameState.clickUpgradePrice
+            ),
+            clickUpgradeLevel: this.getNumber(
+                'clickUpgradeLevel',
+                initialGameState.clickUpgradeLevel
+            ),
+
+            productionUpgradePrice: this.getNumber(
+                'productionUpgradePrice',
+                initialGameState.productionUpgradePrice
+            ),
+            productionUpgradeLevel: this.getNumber(
+                'productionUpgradeLevel',
+                initialGameState.productionUpgradeLevel
+            ),
+
+            globalProductionMultiplier: this.getNumber(
+                'globalProductionMultiplier',
+                initialGameState.globalProductionMultiplier
+            ),
+            globalProductionMultiplierPrice: this.getNumber(
+                'globalProductionMultiplierPrice',
+                initialGameState.globalProductionMultiplierPrice
+            ),
+            globalProductionMultiplierLevel: this.getNumber(
+                'globalProductionMultiplierLevel',
+                initialGameState.globalProductionMultiplierLevel
+            ),
+
+            producers: this.loadProducers(),
         };
+    }
+
+    private getNumber(key: string, defaultValue: number): number {
+        return Number(localStorage.getItem(key) ?? defaultValue);
+    }
+
+    private loadProducers(): Producer[] {
+        const savedProducers = localStorage.getItem('producers');
+
+        if (savedProducers) {
+            try {
+                return this.mergeProducers(JSON.parse(savedProducers));
+            } catch {
+                return structuredClone(initialProducers);
+            }
+        }
+
+        return this.loadLegacyProducers();
+    }
+
+    private loadLegacyProducers(): Producer[] {
+        const producers = structuredClone(initialProducers);
+
+        const farmers = producers.find((producer) => producer.id === 'farmers');
+        const tractors = producers.find((producer) => producer.id === 'tractors');
+
+        if (farmers) {
+            farmers.quantity = this.getNumber('autoFarmers', farmers.quantity);
+            farmers.price = this.getNumber('farmerPrice', farmers.price);
+            farmers.productionRate = this.getNumber('productionRate', farmers.productionRate);
+        }
+
+        if (tractors) {
+            tractors.quantity = this.getNumber('tractors', tractors.quantity);
+            tractors.price = this.getNumber('tractorPrice', tractors.price);
+            tractors.productionRate = this.getNumber(
+                'tractorProductionRate',
+                tractors.productionRate
+            );
+        }
+
+        return producers;
+    }
+
+    private mergeProducers(savedProducers: Producer[]): Producer[] {
+        return initialProducers.map((initialProducer) => {
+            const savedProducer = savedProducers.find(
+                (producer) => producer.id === initialProducer.id
+            );
+
+            return savedProducer
+                ? { ...initialProducer, ...savedProducer }
+                : structuredClone(initialProducer);
+        });
     }
 }

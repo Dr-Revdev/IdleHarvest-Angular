@@ -24,27 +24,27 @@
       <h2>Statistiques</h2>
 
       <p>Carottes : <strong>{{ gameService.gameState.carrots | formatNumber }}</strong></p>
-      <p>Fermiers : <strong>{{ gameService.gameState.autoFarmers | formatNumber }}</strong></p>
       <p>Carottes par clic : <strong>{{ gameService.gameState.carrotsPerClick | formatNumber }}</strong></p>
-      <p>
-        Production par fermier :
-        <strong>{{ gameService.gameState.productionRate | formatNumber }}</strong> / sec
-      </p>
-      <p>
-        Tracteurs :
-        <strong>{{ gameService.gameState.tractors | formatNumber }}</strong>
-      </p>
 
-      <p>
-        Production par tracteur :
-        <strong>{{ gameService.gameState.tractorProductionRate | formatNumber }}</strong>
-        / sec
-      </p>
+      @for (producer of gameService.gameState.producers; track producer.id) {
+        <p>
+          {{ producer.name }} :
+          <strong>{{ producer.quantity | formatNumber }}</strong>
+        </p>
+
+        <p>
+          Production par unité :
+          <strong>{{ producer.productionRate | formatNumber }}</strong>
+          / sec
+        </p>
+      }
+
       <p>
         Production totale :
         <strong> {{ gameService.totalProduction | formatNumber }} </strong>
         / sec
       </p>
+
       <p>
         Multiplicateur global :
         <strong>x{{ gameService.gameState.globalProductionMultiplier }}</strong>
@@ -53,39 +53,48 @@
 
     <aside class="shop-panel">
       <h2>Boutique</h2>
-      <button type="button" (click)="gameService.buyClickUpgrade()" [disabled]="!gameService.canBuyClickUpgrade()">
-        <span>
-          Gants renforcés - Niveau {{ gameService.gameState.clickUpgradeLevel }}
-        </span>
-        <small>Coût : {{ gameService.gameState.clickUpgradePrice | formatNumber }} carottes</small>
-      </button>
-
-      <button type="button" (click)="gameService.buyFarmer()" [disabled]="!gameService.canBuyFarmer()">
-        <span>Acheter un fermier</span>
-        <small>Coût : {{ gameService.gameState.farmerPrice | formatNumber }} carottes</small>
-      </button>      
-
-      <button type="button" (click)="gameService.buyProductionUpgrade()"
-        [disabled]="!gameService.canBuyProductionUpgrade()">
-        <span>
-          Engrais - Niveau {{ gameService.gameState.productionUpgradeLevel }}
-        </span>
-        <small>Coût : {{ gameService.gameState.productionUpgradePrice | formatNumber }} carottes</small>
-      </button>
 
       <button
         type="button"
-        (click)="gameService.buyTractor()"
-        [disabled]="!gameService.canBuyTractor()"
+        (click)="gameService.buyClickUpgrade()"
+        [disabled]="!gameService.canBuyClickUpgrade()"
       >
-        <span>Acheter un tracteur</span>
+        <span>
+          Gants renforcés - Niveau {{ gameService.gameState.clickUpgradeLevel }}
+        </span>
         <small>
-          Coût :
-          {{ gameService.gameState.tractorPrice | formatNumber }}
-          carottes
+          Coût : {{ gameService.gameState.clickUpgradePrice | formatNumber }} carottes
         </small>
       </button>
-      
+
+      @for (producer of gameService.gameState.producers; track producer.id) {
+        <button
+          type="button"
+          (click)="gameService.buyProducer(producer.id)"
+          [disabled]="!gameService.canBuyProducer(producer.id)"
+        >
+          <span>Acheter : {{ producer.name }}</span>
+          <small>
+            Coût :
+            {{ producer.price | formatNumber }}
+            carottes
+          </small>
+        </button>
+      }
+
+      <button
+        type="button"
+        (click)="gameService.buyProductionUpgrade()"
+        [disabled]="!gameService.canBuyProductionUpgrade()"
+      >
+        <span>
+          Engrais - Niveau {{ gameService.gameState.productionUpgradeLevel }}
+        </span>
+        <small>
+          Coût : {{ gameService.gameState.productionUpgradePrice | formatNumber }} carottes
+        </small>
+      </button>
+
       <button
         type="button"
         (click)="gameService.buyGlobalProductionMultiplier()"
